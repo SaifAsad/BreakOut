@@ -1,59 +1,87 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package AssignmentOne;
-
+import java.awt.Color;
+import java.awt.Graphics;
 /**
  *
  * @author Saif Asad
  */
+
 public abstract class Block {
-    private int location;
-    private int size;
-    private String color;
+    
+    private int positionX;
+    private int positionY;
+    private int width;
+    private int height;
+    private Color color;
     private boolean isVisible;
-
+    
     /**
-     * @return the location
+     * @return the positionX
      */
-    public int getLocation() {
-        return location;
+    public int getPositionX() {
+        return positionX;
     }
 
     /**
-     * @param location the location to set
+     * @param positionX the positionX to set
      */
-    public void setLocation(int location) {
-        this.location = location;
+    public void setPositionX(int positionX) {
+        this.positionX = positionX;
     }
 
     /**
-     * @return the size
+     * @return the positionY
      */
-    public int getSize() {
-        return size;
+    public int getPositionY() {
+        return positionY;
     }
 
     /**
-     * @param size the size to set
+     * @param positionY the positionY to set
      */
-    public void setSize(int size) {
-        this.size = size;
+    public void setPositionY(int positionY) {
+        this.positionY = positionY;
+    }
+
+    /**
+     * @return the width
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * @param width the width to set
+     */
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    /**
+     * @return the height
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @param height the height to set
+     */
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     /**
      * @return the color
      */
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
     /**
      * @param color the color to set
      */
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -69,7 +97,5 @@ public abstract class Block {
      */
     public void setIsVisible(boolean isVisible) {
         this.isVisible = isVisible;
-    }
-    
-    
+    }  
 }

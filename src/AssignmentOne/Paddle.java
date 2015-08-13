@@ -18,8 +18,44 @@ public class Paddle extends Block {
     
     //move left / right
     //move command recieed from the game object which takes them from the user input
-    private int moveLeft;
-    private int moveRight;
     
+    private double distance;
+    
+    public Paddle(int positionX, int PositionY, int width, int height, Color color)
+    {//setup the block with variables
+        super.setPositionX(positionX);
+        super.setPositionY(PositionY);
+        super.setWidth(width);
+        super.setHeight(height);
+        super.setIsVisible(true);
+        super.setColor(color);
+    }
+    
+    
+    
+    //????????????????????????
+    //do not go outside the limit of the window
+    public void moveLeft(){
+        
+        this.setPositionX(this.getPositionX() - 50);
+    }
+    public void moveRight(){
+        
+        this.setPositionX(this.getPositionX() + 50);
+    }
+   
+    /**
+     * @return the distance
+     */
+    public double getDistance() {
+        return distance;
+    }
+
+    /**
+     * @param distance the distance to set
+     */
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
     
 }

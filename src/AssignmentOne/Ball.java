@@ -1,29 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package AssignmentOne;
 
 import java.awt.Color;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Saif Asad
  */
-public class Ball {
+public class Ball implements Runnable{
     private double deltaT;
     private double radius;
-
     private double positionX;
     private double positionY;
     private double velocityX;
     private double velocityY;
     private final Color color = Color.red;
-
     private static Random random;
-
+    private Thread thread;
+    private boolean isRunning;
+   
     public void move() {
         positionX += deltaT * velocityX;
         positionY += deltaT * velocityY;
@@ -34,6 +32,81 @@ public class Ball {
         return "position(" + getPositionX() + "," + getPositionY() + "), velocity("
                 + getVelocityX() + "," + getVelocityY() + "), deltaT(" + getDeltaT()
                 + "), radius(" + getRadius() + ")";
+    }
+    
+    /*
+    public void paintComponent(Graphics g) {
+        g.fillOval((int) (this.getPositionX() - this.getRadius()),
+                    (int) (this.getPositionY() - this.getRadius()),
+                    (int) this.getRadius() * 2, (int) this.getRadius() * 2);
+    }
+     */ 
+    public void start() {
+        thread = new Thread(this);
+        isRunning = true;
+        thread.start();
+    }
+    
+    public void stop() {
+        isRunning = false;
+        thread = null;
+    }
+
+    @Override
+    public void run() {
+        while (isRunning) {
+            repaint();
+        
+           
+                if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
+                        || ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() < ball.getRadius()) {
+                    ball.setVelocityX(-ball.getVelocityX());
+                    ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+                }
+                if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
+                        || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
+                    ball.setVelocityY(-ball.getVelocityY());
+                    ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+                }
+            
+
+            for (int i = 0; i < NUMBER_OF_BALLS; i++) {
+                for (int j = i + 1; j < NUMBER_OF_BALLS; j++) {
+
+                    Ball ball1 = balls.get(i);
+                    Ball ball2 = balls.get(j);
+
+                    double deltaX = (ball1.getPositionX() + ball1.getDeltaT() * ball1.getVelocityX())
+                            - (ball2.getPositionX() + ball2.getDeltaT() * ball2.getVelocityX());
+
+                    double deltaY = (ball1.getPositionY() + ball1.getDeltaT() * ball1.getVelocityY())
+                            - (ball2.getPositionY() + ball2.getDeltaT() * ball2.getVelocityY());
+
+                    if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball1.getRadius() + ball2.getRadius()) {
+                        double tempX = ball1.getVelocityX();
+                        double tempY = ball1.getVelocityY();
+                        double tempT = ball1.getDeltaT();
+                        ball1.setVelocityX(ball2.getVelocityX());
+                        ball1.setVelocityY(ball2.getVelocityY());
+                        ball1.setDeltaT(ball2.getDeltaT());
+                        ball2.setVelocityX(tempX);
+                        ball2.setVelocityY(tempY);
+                        ball2.setDeltaT(tempT);
+                        break;
+                    }
+                }
+            }
+
+           
+            this.move();
+           
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Ball.class.getName()).log(
+                        Level.SEVERE, null, ex);
+            }
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------
@@ -91,17 +164,13 @@ public class Ball {
         return color;
     }
 
-    /**
-     * generates a random number
-     * 
-     * @param min
-     * @param max
-     * @return 
-     */
     private static int randomInt(int min, int max) {
         return random.nextInt((max - min) + 1) + min;
     }
 
+    //-------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------
     public static void main(String[] args) {
         random = new Random();
         int iteration = -1;
@@ -114,7 +183,6 @@ public class Ball {
         double n = Math.sqrt(x * x + y * y);
         ball.setVelocityX(x / n);
         ball.setVelocityY(y / n);
-        ///ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
         ball.setRadius(10);
         ball.setDeltaT(1.0);
         while (iteration++ < 100) {
@@ -122,6 +190,4 @@ public class Ball {
             ball.move();
         }
     }
-
-    
 }
