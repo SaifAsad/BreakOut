@@ -44,13 +44,10 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         Scanner scanString = new Scanner(System.in);
         Scanner scanInt = new Scanner(System.in);
         //ask for player name
-        System.out.print("Please enter your name: ");
-        playerName = scanString.nextLine();
         //initial score is zero
-        Player player = new Player(playerName, 0);
+        //Player player = new Player(playerName, 0);
 
-        //ask for difficulty
-        difficulty = scanInt.nextInt();
+     
         Ball b = new Ball();
         p = new Paddle(300, 550, 20, 10, Color.black);
         this.addKeyListener(new KeyboardInput());
@@ -58,7 +55,6 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         this.requestFocusInWindow();
 
         repaint();
-        //setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
         //read top 10 high scores from a textfile
         //HighScore.readHighScores();
         //random = new Random(System.currentTimeMillis());
@@ -121,16 +117,17 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         super.paintComponent(g);
         System.out.println("This is running");
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
-        Brick brick = null;
+        //Brick brick = new Brick(DEFAULT_WIDTH/8*1, DEFAULT_HEIGHT/8, 20,10, Color.red, true, 10 , false);
         //draw bricks
         for (int i = 0; i < NUMBER_OF_BRICKS; i++) {
+            Brick brick = new Brick(DEFAULT_WIDTH/8*i, DEFAULT_HEIGHT/8, 20,10, Color.red, true, 10 , false);
             brick.drawBricks(g, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         }
         //draw ball
 
         //draw paddle
         g.setColor(p.getColor());
-        System.out.println("paddle colour: " + p.getColor().toString());
+        //System.out.println("paddle colour: " + p.getColor().toString());
         g.fill3DRect(p.getPositionX(), p.getPositionY(), p.getWidth(), p.getHeight(), true);
 
     }

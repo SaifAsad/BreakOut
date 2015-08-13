@@ -34,10 +34,11 @@ public class Brick extends Block{
 
     public void drawBricks(Graphics g, int defaultWidth, int defaultHeight)
     {
-        Brick brick;
-        brick = new Brick(defaultWidth/8*1, defaultHeight/8, 20,10, Color.red, true, 10 , false);
-        g.setColor(brick.getColor());
-        g.fill3DRect(brick.getPositionX(), brick.getPositionY(), brick.getWidth(), brick.getHeight(), true);
+        //Brick brick;
+        //brick = new Brick(defaultWidth/8*1, defaultHeight/8, 20,10, Color.red, true, 10 , false);
+        System.out.println("drawBricks called");
+        g.setColor(this.getColor());
+        g.fill3DRect(this.getPositionX(), this.getPositionY(), this.getWidth(), this.getHeight(), true);
     }
     //-----------------------------------------------------------getters and setters-----------------------------------------
     /**
