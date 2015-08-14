@@ -2,6 +2,7 @@
 package AssignmentOne;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,18 @@ public class Ball implements Runnable{
     private Thread thread;
     private boolean isRunning;
    
+    public Ball(){
+        this.setPositionX(randomInt(20, 580));
+        this.setPositionY(randomInt(20, 580));
+        double x = random.nextDouble();
+        double y = random.nextDouble();
+        double n = Math.sqrt(x * x + y * y);
+        this.setVelocityX(x / n);
+        this.setVelocityY(y / n);
+        this.setRadius(10);
+        this.setDeltaT(1.0);
+    }
+    
     public void move() {
         positionX += deltaT * velocityX;
         positionY += deltaT * velocityY;
@@ -34,13 +47,12 @@ public class Ball implements Runnable{
                 + "), radius(" + getRadius() + ")";
     }
     
-    /*
-    public void paintComponent(Graphics g) {
+    public void drawBall(Graphics g) {
+        g.setColor(this.getColor());
         g.fillOval((int) (this.getPositionX() - this.getRadius()),
                     (int) (this.getPositionY() - this.getRadius()),
                     (int) this.getRadius() * 2, (int) this.getRadius() * 2);
     }
-     */ 
     public void start() {
         thread = new Thread(this);
         isRunning = true;
@@ -95,11 +107,8 @@ public class Ball implements Runnable{
                         break;
                     }
                 }
-            }
-
-           
-            this.move();
-           
+            }         
+            this.move();          
             try {
                 Thread.sleep(50);
             } catch (InterruptedException ex) {

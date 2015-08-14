@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,8 +34,13 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     Random random;
     String playerName;
     int difficulty;
-    private Paddle p;
-
+    
+    
+    //items needed on the screen
+    private final Paddle paddle;
+    private Ball ball;
+    
+    
     public BreakOut() {
         super(new BorderLayout());
         setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
@@ -46,10 +52,11 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         //ask for player name
         //initial score is zero
         //Player player = new Player(playerName, 0);
-
+        //JOptionPane nameContainer = new JOptionPane("Please enter your name: ");
+        
      
-        Ball b = new Ball();
-        p = new Paddle(300, 550, 20, 10, Color.black);
+        ball = new Ball();
+        paddle = new Paddle(300, 550, 20, 10, Color.black);
         this.addKeyListener(new KeyboardInput());
         this.setFocusable(true);
         this.requestFocusInWindow();
@@ -115,21 +122,18 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println("This is running");
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
-        //Brick brick = new Brick(DEFAULT_WIDTH/8*1, DEFAULT_HEIGHT/8, 20,10, Color.red, true, 10 , false);
+        
         //draw bricks
         for (int i = 0; i < NUMBER_OF_BRICKS; i++) {
+            //creating a new brick object is going to be done inside the constructor to initialize the array
             Brick brick = new Brick(DEFAULT_WIDTH/8*i, DEFAULT_HEIGHT/8, 20,10, Color.red, true, 10 , false);
-            brick.drawBricks(g, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+            brick.drawBricks(g);
         }
         //draw ball
-
+        ball.drawBall(g);
         //draw paddle
-        g.setColor(p.getColor());
-        //System.out.println("paddle colour: " + p.getColor().toString());
-        g.fill3DRect(p.getPositionX(), p.getPositionY(), p.getWidth(), p.getHeight(), true);
-
+        paddle.drawPaddle(g);
     }
 
     @Override
@@ -137,19 +141,18 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     }
 
     class KeyboardInput extends KeyAdapter {
-
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                p.moveLeft();
-                if (p.getPositionX() < 0) {
-                    p.setPositionX(0);
+                paddle.moveLeft();
+                if (paddle.getPositionX() < 0) {
+                    paddle.setPositionX(0);
                 }
                 System.out.println("Moved left");
             } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                p.moveRight();
-                if ((p.getPositionX() + p.getWidth()) > DEFAULT_WIDTH) {
-                    p.setPositionX(DEFAULT_WIDTH - p.getWidth());
+                paddle.moveRight();
+                if ((paddle.getPositionX() + paddle.getWidth()) > DEFAULT_WIDTH) {
+                    paddle.setPositionX(DEFAULT_WIDTH - paddle.getWidth());
                 }
                 System.out.println("Moved right");
             }
@@ -174,7 +177,6 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
         breakOut.start();
     }
 }
