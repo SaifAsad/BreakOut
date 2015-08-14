@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -32,7 +34,6 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     private static final int PADDLE_WIDTH = 150;
     private static final int PADDLE_HEIGHT = 20;
 
-    //private final List<Brick> bricks;
     private Brick[][] bricks;
     //private Brick brick;
     private Thread thread;
@@ -45,14 +46,13 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     private final Paddle paddle;
     private Ball ball;
 
-    private Color[] colors = {Color.yellow, Color.GREEN, Color.CYAN, Color.orange, Color.red, Color.darkGray};
+    private Color[] colors = {Color.blue, Color.GREEN, Color.CYAN, Color.MAGENTA, Color.yellow, Color.darkGray};
 
     public BreakOut() {
         super(new BorderLayout());
         setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
         bricks = new Brick[NUMBER_OF_ROWS][NUMBER_OF_COLS];
-
         //initialize the bricks array
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < NUMBER_OF_COLS; j++) {
@@ -68,7 +68,7 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         //Player player = new Player(playerName, 0);
         //JOptionPane nameContainer = new JOptionPane("Please enter your name: ");
 
-        //ball = new Ball();
+        ball = new Ball();
         paddle = new Paddle(400, 700, PADDLE_WIDTH, PADDLE_HEIGHT, Color.black);
         this.addKeyListener(new KeyboardInput());
         this.setFocusable(true);
@@ -132,11 +132,19 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         thread = null;
     }
 
+    public void pause() throws InterruptedException{
+        System.out.println("Game Paused");
+        thread.wait();
+    }
+    
+    public void resume(){
+        thread.resume();
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
-
         //draw bricks
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < NUMBER_OF_COLS; j++) {
@@ -144,7 +152,7 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
             }
         }
         //draw ball
-        //ball.drawBall(g);
+        ball.drawBall(g);
         //draw paddle
         paddle.drawPaddle(g);
     }
@@ -169,7 +177,14 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
                     paddle.setPositionX(DEFAULT_WIDTH - paddle.getWidth());
                 }
                 System.out.println("Moved right");
-            }
+            } else if (e.getKeyCode() == KeyEvent.VK_B) {
+                try {
+                    pause();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(BreakOut.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("thread paused");
+            } 
             repaint();
         }
     }
@@ -179,7 +194,14 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BreakOut breakOut = new BreakOut();
 
-        frame.addWindowListener(new WindowAdapter() {
+        frame.setContentPane(breakOut);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        breakOut.start();
+
+        frame.addWindowListener(new WindowAdapter() { 
             @Override
             public void windowClosing(WindowEvent e) {
                 //add code to write scores to file
@@ -187,10 +209,5 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
                 breakOut.stop();
             }
         });
-        frame.setContentPane(breakOut);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        breakOut.start();
     }
 }

@@ -21,7 +21,7 @@ public class Paddle extends Block {
     //????????????????????????
     //do not go outside the limit of the window
     public void moveLeft(){
-        
+    
         this.setPositionX(this.getPositionX() - 50);
     }
     public void moveRight(){

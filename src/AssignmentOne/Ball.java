@@ -1,4 +1,3 @@
-
 package AssignmentOne;
 
 import java.awt.Color;
@@ -11,30 +10,33 @@ import java.util.logging.Logger;
  *
  * @author Saif Asad
  */
-public class Ball implements Runnable{
+public class Ball implements Runnable {
+
     private double deltaT;
     private double radius;
     private double positionX;
     private double positionY;
     private double velocityX;
     private double velocityY;
-    private final Color color = Color.red;
     private static Random random;
-    private Thread thread;
+    private Color color;
+    private Thread ballThread;
     private boolean isRunning;
-   
-    public Ball(){
-        this.setPositionX(randomInt(20, 580));
-        this.setPositionY(randomInt(20, 580));
-        double x = random.nextDouble();
-        double y = random.nextDouble();
-        double n = Math.sqrt(x * x + y * y);
-        this.setVelocityX(x / n);
-        this.setVelocityY(y / n);
+
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public Ball() {
+        setPositionX(550);
+        setPositionY(580);
+        //double x = random.nextDouble();
+        //double y = random.nextDouble();
+        //double n = Math.sqrt(x * x + y * y);
+        this.setVelocityX(20);
+        this.setVelocityY(50);
         this.setRadius(10);
         this.setDeltaT(1.0);
+        this.setColor(Color.red);
     }
-    
+
     public void move() {
         positionX += deltaT * velocityX;
         positionY += deltaT * velocityY;
@@ -46,69 +48,68 @@ public class Ball implements Runnable{
                 + getVelocityX() + "," + getVelocityY() + "), deltaT(" + getDeltaT()
                 + "), radius(" + getRadius() + ")";
     }
-    
+
     public void drawBall(Graphics g) {
         g.setColor(this.getColor());
         g.fillOval((int) (this.getPositionX() - this.getRadius()),
-                    (int) (this.getPositionY() - this.getRadius()),
-                    (int) this.getRadius() * 2, (int) this.getRadius() * 2);
+                (int) (this.getPositionY() - this.getRadius()),
+                (int) this.getRadius() * 2, (int) this.getRadius() * 2);
     }
+
     public void start() {
-        thread = new Thread(this);
+        ballThread = new Thread(this);
         isRunning = true;
-        thread.start();
+        ballThread.start();
     }
-    
+
     public void stop() {
         isRunning = false;
-        thread = null;
+        ballThread = null;
     }
 
     @Override
     public void run() {
         while (isRunning) {
             repaint();
-        
-           
-                if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
-                        || ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() < ball.getRadius()) {
-                    ball.setVelocityX(-ball.getVelocityX());
-                    ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
-                }
-                if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
-                        || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
-                    ball.setVelocityY(-ball.getVelocityY());
-                    ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
-                }
-            
 
-            for (int i = 0; i < NUMBER_OF_BALLS; i++) {
-                for (int j = i + 1; j < NUMBER_OF_BALLS; j++) {
+            //check ball collision with sides
+            if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
+                    || ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() < ball.getRadius()) {
+                ball.setVelocityX(-ball.getVelocityX());
+                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+            }
+            //check ball collision with the top and down
+            if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
+                    || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
+                ball.setVelocityY(-ball.getVelocityY());
+                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+            }
+            //check collision with other balls
+            //check collision with bricks
+            //for (int i = 0; i < NUMBER_OF_BALLS; i++) {
+            //   for (int j = i + 1; j < NUMBER_OF_BALLS; j++) {
+            Ball ball1 = balls.get(i);
+            Ball ball2 = balls.get(j);
 
-                    Ball ball1 = balls.get(i);
-                    Ball ball2 = balls.get(j);
+            double deltaX = (ball1.getPositionX() + ball1.getDeltaT() * ball1.getVelocityX())
+                    - (ball2.getPositionX() + ball2.getDeltaT() * ball2.getVelocityX());
 
-                    double deltaX = (ball1.getPositionX() + ball1.getDeltaT() * ball1.getVelocityX())
-                            - (ball2.getPositionX() + ball2.getDeltaT() * ball2.getVelocityX());
+            double deltaY = (ball1.getPositionY() + ball1.getDeltaT() * ball1.getVelocityY())
+                    - (ball2.getPositionY() + ball2.getDeltaT() * ball2.getVelocityY());
 
-                    double deltaY = (ball1.getPositionY() + ball1.getDeltaT() * ball1.getVelocityY())
-                            - (ball2.getPositionY() + ball2.getDeltaT() * ball2.getVelocityY());
-
-                    if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball1.getRadius() + ball2.getRadius()) {
-                        double tempX = ball1.getVelocityX();
-                        double tempY = ball1.getVelocityY();
-                        double tempT = ball1.getDeltaT();
-                        ball1.setVelocityX(ball2.getVelocityX());
-                        ball1.setVelocityY(ball2.getVelocityY());
-                        ball1.setDeltaT(ball2.getDeltaT());
-                        ball2.setVelocityX(tempX);
-                        ball2.setVelocityY(tempY);
-                        ball2.setDeltaT(tempT);
-                        break;
-                    }
-                }
-            }         
-            this.move();          
+            if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball1.getRadius() + ball2.getRadius()) {
+                double tempX = ball1.getVelocityX();
+                double tempY = ball1.getVelocityY();
+                double tempT = ball1.getDeltaT();
+                ball1.setVelocityX(ball2.getVelocityX());
+                ball1.setVelocityY(ball2.getVelocityY());
+                ball1.setDeltaT(ball2.getDeltaT());
+                ball2.setVelocityX(tempX);
+                ball2.setVelocityY(tempY);
+                ball2.setDeltaT(tempT);
+                break;
+            }
+            this.move();
             try {
                 Thread.sleep(50);
             } catch (InterruptedException ex) {
@@ -128,7 +129,7 @@ public class Ball implements Runnable{
     public void setPositionX(double positionX) {
         this.positionX = positionX;
     }
-    
+
     public double getPositionY() {
         return positionY;
     }
@@ -173,6 +174,13 @@ public class Ball implements Runnable{
         return color;
     }
 
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     private static int randomInt(int min, int max) {
         return random.nextInt((max - min) + 1) + min;
     }
@@ -184,19 +192,26 @@ public class Ball implements Runnable{
         random = new Random();
         int iteration = -1;
         Ball ball = new Ball();
-      
-        ball.setPositionX(randomInt(20, 580));
-        ball.setPositionY(randomInt(20, 580));
-        double x = random.nextDouble();
-        double y = random.nextDouble();
-        double n = Math.sqrt(x * x + y * y);
-        ball.setVelocityX(x / n);
-        ball.setVelocityY(y / n);
-        ball.setRadius(10);
-        ball.setDeltaT(1.0);
+
+        /*
+         ball.setPositionX(randomInt(20, 580));
+         ball.setPositionY(randomInt(20, 580));
+         double x = random.nextDouble();
+         double y = random.nextDouble();
+         double n = Math.sqrt(x * x + y * y);
+         ball.setVelocityX(x / n);
+         ball.setVelocityY(y / n);
+         ball.setRadius(10);
+         ball.setDeltaT(1.0);
+         */
         while (iteration++ < 100) {
             System.out.println(ball);
             ball.move();
         }
+    }
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
