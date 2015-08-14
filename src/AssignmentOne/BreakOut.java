@@ -22,30 +22,44 @@ import javax.swing.JOptionPane;
  */
 public class BreakOut extends JPanel implements Runnable, ActionListener {
 
-    private static final int DEFAULT_WIDTH = 600;
-    private static final int DEFAULT_HEIGHT = 600;
-    public static final int NUMBER_OF_BRICKS = 40; //5 rows * 8 cols
+    private static final int DEFAULT_WIDTH = 800;
+    private static final int DEFAULT_HEIGHT = 800;
+    private static final int NUMBER_OF_BRICKS = 40; //5 rows * 8 cols
+    private static final int NUMBER_OF_ROWS = 5; //5 rows * 8 cols
+    private static final int NUMBER_OF_COLS = 8; //5 rows * 8 cols
+    private static final int BRICK_WIDTH = 100;
+    private static final int BRICK_HEIGHT = 20;
+    private static final int PADDLE_WIDTH = 150;
+    private static final int PADDLE_HEIGHT = 20;
 
     //private final List<Brick> bricks;
-    private Brick[] bricks;
-
+    private Brick[][] bricks;
+    //private Brick brick;
     private Thread thread;
     private boolean isRunning;
     Random random;
     String playerName;
     int difficulty;
-    
-    
+
     //items needed on the screen
     private final Paddle paddle;
     private Ball ball;
-    
-    
+
+    private Color[] colors = {Color.yellow, Color.GREEN, Color.CYAN, Color.orange, Color.red, Color.darkGray};
+
     public BreakOut() {
         super(new BorderLayout());
         setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
-        bricks = new Brick[NUMBER_OF_BRICKS];
+        bricks = new Brick[NUMBER_OF_ROWS][NUMBER_OF_COLS];
+
+        //initialize the bricks array
+        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+            for (int j = 0; j < NUMBER_OF_COLS; j++) {
+                Brick brick = new Brick(DEFAULT_WIDTH / 8 * j, BRICK_HEIGHT * i, BRICK_WIDTH, BRICK_HEIGHT, colors[i], true, 10, false);
+                bricks[i][j] = brick;
+            }
+        }
 
         Scanner scanString = new Scanner(System.in);
         Scanner scanInt = new Scanner(System.in);
@@ -53,10 +67,9 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
         //initial score is zero
         //Player player = new Player(playerName, 0);
         //JOptionPane nameContainer = new JOptionPane("Please enter your name: ");
-        
-     
-        ball = new Ball();
-        paddle = new Paddle(300, 550, 20, 10, Color.black);
+
+        //ball = new Ball();
+        paddle = new Paddle(400, 700, PADDLE_WIDTH, PADDLE_HEIGHT, Color.black);
         this.addKeyListener(new KeyboardInput());
         this.setFocusable(true);
         this.requestFocusInWindow();
@@ -123,15 +136,15 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
-        
+
         //draw bricks
-        for (int i = 0; i < NUMBER_OF_BRICKS; i++) {
-            //creating a new brick object is going to be done inside the constructor to initialize the array
-            Brick brick = new Brick(DEFAULT_WIDTH/8*i, DEFAULT_HEIGHT/8, 20,10, Color.red, true, 10 , false);
-            brick.drawBricks(g);
+        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+            for (int j = 0; j < NUMBER_OF_COLS; j++) {
+                bricks[i][j].drawBricks(g);
+            }
         }
         //draw ball
-        ball.drawBall(g);
+        //ball.drawBall(g);
         //draw paddle
         paddle.drawPaddle(g);
     }
@@ -141,6 +154,7 @@ public class BreakOut extends JPanel implements Runnable, ActionListener {
     }
 
     class KeyboardInput extends KeyAdapter {
+
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
