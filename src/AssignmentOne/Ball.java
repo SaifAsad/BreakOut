@@ -67,57 +67,57 @@ public class Ball implements Runnable {
         ballThread = null;
     }
 
-    @Override
-    public void run() {
-        while (isRunning) {
-            repaint();
-
-            //check ball collision with sides
-            if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
-                    || ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() < ball.getRadius()) {
-                ball.setVelocityX(-ball.getVelocityX());
-                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
-            }
-            //check ball collision with the top and down
-            if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
-                    || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
-                ball.setVelocityY(-ball.getVelocityY());
-                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
-            }
-            //check collision with other balls
-            //check collision with bricks
-            //for (int i = 0; i < NUMBER_OF_BALLS; i++) {
-            //   for (int j = i + 1; j < NUMBER_OF_BALLS; j++) {
-            Ball ball1 = balls.get(i);
-            Ball ball2 = balls.get(j);
-
-            double deltaX = (ball1.getPositionX() + ball1.getDeltaT() * ball1.getVelocityX())
-                    - (ball2.getPositionX() + ball2.getDeltaT() * ball2.getVelocityX());
-
-            double deltaY = (ball1.getPositionY() + ball1.getDeltaT() * ball1.getVelocityY())
-                    - (ball2.getPositionY() + ball2.getDeltaT() * ball2.getVelocityY());
-
-            if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball1.getRadius() + ball2.getRadius()) {
-                double tempX = ball1.getVelocityX();
-                double tempY = ball1.getVelocityY();
-                double tempT = ball1.getDeltaT();
-                ball1.setVelocityX(ball2.getVelocityX());
-                ball1.setVelocityY(ball2.getVelocityY());
-                ball1.setDeltaT(ball2.getDeltaT());
-                ball2.setVelocityX(tempX);
-                ball2.setVelocityY(tempY);
-                ball2.setDeltaT(tempT);
-                break;
-            }
-            this.move();
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Ball.class.getName()).log(
-                        Level.SEVERE, null, ex);
-            }
-        }
-    }
+//    @Override
+//    public void run() {
+//        while (isRunning) {
+//            repaint();
+//
+//            //check ball collision with sides
+//            if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
+//                    || ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() < ball.getRadius()) {
+//                ball.setVelocityX(-ball.getVelocityX());
+//                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+//            }
+//            //check ball collision with the top and down
+//            if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
+//                    || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
+//                ball.setVelocityY(-ball.getVelocityY());
+//                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+//            }
+//            //check collision with other balls
+//            //check collision with bricks
+//            //for (int i = 0; i < NUMBER_OF_BALLS; i++) {
+//            //   for (int j = i + 1; j < NUMBER_OF_BALLS; j++) {
+//            Ball ball1 = balls.get(i);
+//            Ball ball2 = balls.get(j);
+//
+//            double deltaX = (ball1.getPositionX() + ball1.getDeltaT() * ball1.getVelocityX())
+//                    - (ball2.getPositionX() + ball2.getDeltaT() * ball2.getVelocityX());
+//
+//            double deltaY = (ball1.getPositionY() + ball1.getDeltaT() * ball1.getVelocityY())
+//                    - (ball2.getPositionY() + ball2.getDeltaT() * ball2.getVelocityY());
+//
+//            if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball1.getRadius() + ball2.getRadius()) {
+//                double tempX = ball1.getVelocityX();
+//                double tempY = ball1.getVelocityY();
+//                double tempT = ball1.getDeltaT();
+//                ball1.setVelocityX(ball2.getVelocityX());
+//                ball1.setVelocityY(ball2.getVelocityY());
+//                ball1.setDeltaT(ball2.getDeltaT());
+//                ball2.setVelocityX(tempX);
+//                ball2.setVelocityY(tempY);
+//                ball2.setDeltaT(tempT);
+//                break;
+//            }
+//            this.move();
+//            try {
+//                Thread.sleep(50);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(Ball.class.getName()).log(
+//                        Level.SEVERE, null, ex);
+//            }
+//        }
+//    }
 
     //------------------------------------------------------------------------------------------------------------
     //------------------------------------------------getters and setters-----------------------------------------
