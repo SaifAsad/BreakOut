@@ -3,6 +3,7 @@ package AssignmentOne;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Scanner;
 
 /**
  *
@@ -28,8 +29,17 @@ public class Game implements ActionListener{
     public static void main(String[] args)
     {
         //Testing for writing to a file
+        Player p = new Player("Bob", 1201);
         HighScore h = new HighScore("test.txt");
         h.readHighScores();
+        Scanner s = new Scanner(System.in);
+        if(s.hasNext())
+        {
+            h.writeHighScores();
+        }
+        //need to look at how to do this part with sorting algorithms
+        //h.checkHighScore(p);
+        
         //Starts the game
         //inside the game asks for the player's name
         //sets the name to the player object
