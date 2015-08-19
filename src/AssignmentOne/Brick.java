@@ -53,7 +53,7 @@ public class Brick extends Block {
     /**
      * @return the isSpecial
      */
-    private boolean isIsSpecial() {
+    public boolean isIsSpecial() {
         return isSpecial;
     }
 

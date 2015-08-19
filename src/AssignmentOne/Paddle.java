@@ -18,8 +18,7 @@ public class Paddle extends Block {
         super.setIsVisible(true);
         super.setColor(color);
     }   
-    //????????????????????????
-    //do not go outside the limit of the window
+    
     public void moveLeft(){
     
         this.setPositionX(this.getPositionX() - 50);

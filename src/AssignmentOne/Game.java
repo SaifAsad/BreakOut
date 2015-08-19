@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -24,46 +25,49 @@ import javax.swing.JPanel;
  */
 public class Game extends JPanel implements ActionListener, Runnable {
 
+    //dimensions
+
     private static final int DEFAULT_WIDTH = 800;
     private static final int DEFAULT_HEIGHT = 800;
-    private String playerName = "SAIF";
+    private static final int BRICK_WIDTH = 100;
+    private static final int BRICK_HEIGHT = 20;
+    private static final int PADDLE_WIDTH = 200;
+    private static final int PADDLE_HEIGHT = 10;
+
+    //objects that form the game
+    private Ball ball;
+    private Rectangle ballRectangle;
+    private final Paddle paddle;
+    private Rectangle paddleRectangle;
+    private final List<Ball> balls = null;
+    private Thread thread;
+
+    //temporary variables
+    private String playerName;
     private int difficulty = 1;
     private static final int INITIAL_SCORE = 0;
     private Player player;
 
-    private static final int NUMBER_OF_BRICKS = 40; //5 rows * 8 cols
+    private Brick[][] bricks;
     private static final int NUMBER_OF_ROWS = 5; //5 rows * 8 cols
     private static final int NUMBER_OF_COLS = 8; //5 rows * 8 cols
-    private static final int BRICK_WIDTH = 100;
-    private static final int BRICK_HEIGHT = 20;
-    private static final int PADDLE_WIDTH = 150;
-    private static final int PADDLE_HEIGHT = 20;
-    private Brick[][] bricks;
-    private Thread thread;
+
     private boolean isRunning;
     private static Random random;
-    private final Paddle paddle;
-    private Ball ball;
-    private Color[] colors = {Color.blue, Color.GREEN, Color.CYAN, Color.MAGENTA, Color.yellow, Color.darkGray};
     private double deltaX, deltaY;
-    private final List<Ball> balls = null;
     //keeps track of how many times the player miss to hit the ball with the paddle
     private static int missedCounter = 0;
     //keeps track of how many bricks are hit
-    private int bricksCounter = 0;
-    
+    private int bricksCounter = 40;
+
+    //array of colours
+    private final Color[] colors = {Color.blue, Color.GREEN, Color.CYAN, Color.MAGENTA, Color.yellow, Color.darkGray};
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
     }
-    //hits counter, if 40 player winds
-    //fails counter if 3 the player loses
-    //scores counter, increases every time a brick is hit
 
-    //if a brick is hit
-    //  -make it invisible
-    //  -his++;
-    //  -scores is incemeented depending on the row nummber
     //-------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------CONSTRUCTOR------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -78,10 +82,10 @@ public class Game extends JPanel implements ActionListener, Runnable {
         //initialize the bricks array
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < NUMBER_OF_COLS; j++) {
-                boolean special = true;
-                bricks[i][j] = new Brick(DEFAULT_WIDTH / 8 * j, BRICK_HEIGHT * i, BRICK_WIDTH, BRICK_HEIGHT, colors[i], true, 10, true);   
+                //boolean special = true;
+                bricks[i][j] = new Brick(DEFAULT_WIDTH / 8 * j, BRICK_HEIGHT * i, BRICK_WIDTH, BRICK_HEIGHT, colors[i], true, 10, false);
             }
-      
+
         }
         ball = new Ball();
         //balls.add(ball);
@@ -96,8 +100,6 @@ public class Game extends JPanel implements ActionListener, Runnable {
     //-------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------UTILITY METHODS------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------
-    
-
     @Override
     public void run() {
         while (isRunning) {
@@ -112,17 +114,16 @@ public class Game extends JPanel implements ActionListener, Runnable {
             if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
                     || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
                 ball.setVelocityY(-ball.getVelocityY());
-                
-                if(missedCounter++ == 3){
+                missedCounter++;
+                if (missedCounter == 3) {
                     stop();
-                    JOptionPane.showMessageDialog(null, "You Lose!!!!!"); 
-                    break;
+                    JOptionPane.showMessageDialog(null, "You Lose!!!!!");
+                    break; //skip the while loop
                 }
             }
-            
+
             //----------------------------------------------------chekc collition with paddle------------------------------------------------------------------------
             //-------------------------------------------------------------------------------------------------------------------------------------------
-
             for (int length = 0; length < paddle.getWidth(); length++) {
                 deltaX = (ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX())
                         - (paddle.getPositionX() + length);
@@ -131,34 +132,33 @@ public class Game extends JPanel implements ActionListener, Runnable {
                         - (paddle.getPositionY());
 
                 if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball.getRadius() + (paddle.getHeight() / 2)) {
-                    //ball.setVelocityX(-ball.getVelocityX());
                     ball.setVelocityY(-ball.getVelocityY());
                 }
             }
 
             //check collision with bricks
-            //loop throught the bricks
             boolean quit = true;
-            //booplean quitSecondFor = false;
             for (int i = 0; i < NUMBER_OF_ROWS && quit; i++) {
-                for (int j = 0; j < NUMBER_OF_COLS && quit; j++) {
+                for (int j = 0; j < NUMBER_OF_COLS; j++) {
                     if (bricks[i][j].isIsVisible() == true) {
-                        for (int length = 0; length < bricks[i][j].getWidth(); length++) {
-                            deltaX = (ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX())
-                                    - (bricks[i][j].getPositionX() + length);
-
-                            deltaY = (ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY())
-                                    - (bricks[i][j].getPositionY() + length);
-
-                            if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= ball.getRadius() + (bricks[i][j].getHeight() / 2)) {
-                                bricks[i][j].setIsVisible(false);
-                                //ball.setVelocityX(-ball.getVelocityX());
-                                ball.setVelocityY(-ball.getVelocityY());
+                        ballRectangle = new Rectangle((int) (ball.getPositionX() - ball.getRadius()), (int) (ball.getPositionY() - ball.getRadius()),
+                                (int) (ball.getRadius() * 2), (int) (ball.getRadius() * 2));
+                        Rectangle brickRectangle = new Rectangle((DEFAULT_WIDTH / 8 * j), (BRICK_HEIGHT * i), 
+                                bricks[i][j].getWidth(), bricks[i][j].getHeight());
+                        if (brickRectangle.intersects(ballRectangle)) {
+                            System.out.println("Detected brick collision");
+                            bricksCounter--;
+                            //score++ dependent on the score of the brick
+                            bricks[i][j].setIsVisible(false);
+                            ball.setVelocityY(-ball.getVelocityY());
+                            if (bricks[i][j].isIsSpecial()) {
+                                balls.add(new Ball());
+                                    //add it to the balls thread
                                 //repaint();
-                                bricksCounter++;
-                                quit = false;
-                                break;
                             }
+                            repaint();
+                            quit = false; //this will break the outer for loop
+                            break; //this will break the inner for loop
                         }
                     }
                 }
@@ -190,7 +190,7 @@ public class Game extends JPanel implements ActionListener, Runnable {
              break;
              }
              */
-            if (bricksCounter == 40) {
+            if (bricksCounter == 0) {
                 stop();
                 JOptionPane.showMessageDialog(null, "You won!!!!");
                 break; //leave the while loop
@@ -220,7 +220,6 @@ public class Game extends JPanel implements ActionListener, Runnable {
         System.out.println("Game Paused");
         stop();
         JOptionPane.showMessageDialog(null, "GAME PAUSED");
-        //JOptionPane.showOptionDialog(null, "GAME PAUSED","Paused", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
     }
 
     @Override
@@ -262,7 +261,7 @@ public class Game extends JPanel implements ActionListener, Runnable {
                 System.out.println("thread paused");
             } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 start();
-                System.out.println("thread resumed");;
+                System.out.println("thread resumed");
             }
             repaint();
         }
