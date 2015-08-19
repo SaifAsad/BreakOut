@@ -1,6 +1,6 @@
 package AssignmentOne;
 
-public class Player {
+public class Player implements Comparable<Player> {
 
     private String playerName;
     private int score;
@@ -36,5 +36,10 @@ public class Player {
      */
     public void setScore(int score) {
         this.score = score;
+    }
+
+    @Override
+    public int compareTo(Player otherPlayer) {
+        return this.getScore() - otherPlayer.getScore();
     }
 }

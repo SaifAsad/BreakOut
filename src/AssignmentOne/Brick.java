@@ -21,6 +21,8 @@ public class Brick extends Block {
         super.setWidth(width);
         super.setHeight(height);
         super.setIsVisible(isVisible);
+        
+        this.setIsSpecial(isSpecial);
         if (isSpecial) {//setup the special block to be gray and not have a score value
             super.setColor(Color.gray);
             this.score = 0;
@@ -62,5 +64,10 @@ public class Brick extends Block {
      */
     public void setIsSpecial(boolean isSpecial) {
         this.isSpecial = isSpecial;
+    }
+    
+    @Override
+    public String toString(){
+        return "Position x: " + this.getPositionX() + "Position y: " + this.getPositionY() +  "Score:  " + this.getScore() + "Special: " + this.isIsSpecial();
     }
 }

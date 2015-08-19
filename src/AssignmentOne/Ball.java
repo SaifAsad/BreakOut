@@ -33,7 +33,7 @@ public class Ball {
         this.setVelocityX(5);
         this.setVelocityY(5);
         this.setRadius(10);
-        this.setDeltaT(1.0);
+        this.setDeltaT(3.0);
         this.setColor(Color.red);
     }
 
