@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  *
  * @author Saif Asad
  */
-public class Ball implements Runnable {
+public class Ball {
 
     private double deltaT;
     private double radius;
@@ -25,13 +25,13 @@ public class Ball implements Runnable {
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public Ball() {
-        setPositionX(550);
-        setPositionY(580);
+        setPositionX(600);
+        setPositionY(400);
         //double x = random.nextDouble();
         //double y = random.nextDouble();
         //double n = Math.sqrt(x * x + y * y);
-        this.setVelocityX(20);
-        this.setVelocityY(50);
+        this.setVelocityX(5);
+        this.setVelocityY(5);
         this.setRadius(10);
         this.setDeltaT(1.0);
         this.setColor(Color.red);
@@ -55,7 +55,7 @@ public class Ball implements Runnable {
                 (int) (this.getPositionY() - this.getRadius()),
                 (int) this.getRadius() * 2, (int) this.getRadius() * 2);
     }
-
+/*
     public void start() {
         ballThread = new Thread(this);
         isRunning = true;
@@ -67,25 +67,48 @@ public class Ball implements Runnable {
         ballThread = null;
     }
 
+    
     @Override
     public void run() {
         while (isRunning) {
             repaint();
 
             //check ball collision with sides
-            if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
-                    || ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() < ball.getRadius()) {
-                ball.setVelocityX(-ball.getVelocityX());
-                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+            if ((this.getPositionX() + this.getDeltaT() * this.getVelocityX() > getWidth() - this.getRadius())
+                    || this.getPositionX() + this.getDeltaT() * this.getVelocityX() < this.getRadius()) {
+                this.setVelocityX(-this.getVelocityX());
             }
-            //check ball collision with the top and down
-            if ((ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() > getHeight() - ball.getRadius())
-                    || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
-                ball.setVelocityY(-ball.getVelocityY());
-                ball.setColor(Color.getHSBColor(random.nextFloat(), 1.0f, 1.0f));
+            //check ball collision with bottom
+            if ((this.getPositionY() + this.getDeltaT() * this.getVelocityY()) > (getHeight() - this.getRadius())) {
+                //revert direction
+                this.setVelocityY(-this.getVelocityY());
+                //inform the game object that the paddle missed the ball
+                //?
+                //?
+                //?
             }
+
+            //chekc collition with paddle
             //check collision with other balls
             //check collision with bricks
+            //loop throught the bricks
+            for (int i = 0; i < 40; i++) {
+                if (bricks[i].isVisible == true) {
+
+                    double deltaX = (this.getPositionX() + this.getDeltaT() * this.getVelocityX())
+                            - (bricks[i].getPositionX() - bricks[i].getWidth());
+
+                    double deltaY = (this.getPositionY() + this.getDeltaT() * this.getVelocityY())
+                            - (bricks[i].getPositionY() - bricks[i].getHeight());
+
+                    if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) <= this.getRadius() + bricks[i].getHeight()) {
+                        bricks[i].isVisible = false;
+                        this.setVelocityX(-this.getVelocityX());
+                    }
+                }
+
+            }
+
             //for (int i = 0; i < NUMBER_OF_BALLS; i++) {
             //   for (int j = i + 1; j < NUMBER_OF_BALLS; j++) {
             Ball ball1 = balls.get(i);
@@ -118,7 +141,7 @@ public class Ball implements Runnable {
             }
         }
     }
-
+*/
     //------------------------------------------------------------------------------------------------------------
     //------------------------------------------------getters and setters-----------------------------------------
     //------------------------------------------------------------------------------------------------------------
@@ -174,9 +197,6 @@ public class Ball implements Runnable {
         return color;
     }
 
-    /**
-     * @param color the color to set
-     */
     public void setColor(Color color) {
         this.color = color;
     }
@@ -208,10 +228,5 @@ public class Ball implements Runnable {
             System.out.println(ball);
             ball.move();
         }
-    }
-
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

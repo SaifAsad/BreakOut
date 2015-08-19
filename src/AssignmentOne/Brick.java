@@ -24,13 +24,12 @@ public class Brick extends Block {
         if (isSpecial) {//setup the special block to be gray and not have a score value
             super.setColor(Color.gray);
             this.score = 0;
-        } else//this block is not special and must have a score value
-        {
+        } else{//this block is not special and must have a score value
             this.score = score;
             super.setColor(color);
         }
     }
-
+    
     public void drawBricks(Graphics g) {
         g.setColor(this.getColor());
         g.fill3DRect(this.getPositionX(), this.getPositionY(), this.getWidth(), this.getHeight(), true);
@@ -54,7 +53,7 @@ public class Brick extends Block {
     /**
      * @return the isSpecial
      */
-    public boolean isIsSpecial() {
+    private boolean isIsSpecial() {
         return isSpecial;
     }
 

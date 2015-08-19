@@ -10,7 +10,7 @@ import java.awt.List;
  * @author Saif Asad
  */
 public class HighScore {
-   private List<Integer> scores;
+   //private List<> scores;
    
    
    
@@ -23,10 +23,8 @@ public class HighScore {
    
    
    //read scores from disk
-   public List<> readHighScores(){
+   //public List<> readHighScores(){
        
-       return;
-   }
-   
-   
+     //  return ;
+   //}   
 }
