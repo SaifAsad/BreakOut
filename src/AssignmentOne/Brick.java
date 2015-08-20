@@ -5,6 +5,8 @@ import java.awt.Graphics;
 
 /**
  *
+ * 
+ * 
  * @author Saif Asad
  */
 public class Brick extends Block {
@@ -68,6 +70,6 @@ public class Brick extends Block {
     
     @Override
     public String toString(){
-        return "Position x: " + this.getPositionX() + "Position y: " + this.getPositionY() +  "Score:  " + this.getScore() + "Special: " + this.isIsSpecial();
+        return "Score:  " + this.getScore() + "Special: " + this.isIsSpecial();
     }
 }
