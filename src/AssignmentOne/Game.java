@@ -121,18 +121,47 @@ public class Game extends JPanel implements ActionListener, Runnable {
     //-------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------UTILITY METHODS------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------
+    public void checkHighScore(Graphics g)
+    {
+        super.paintComponent(g);
+        HighScore h = new HighScore("highscores.txt");
+        h.readHighScores();
+        h.checkHighScore(player);
+        Sort<Player> sortScores = new Sort(h.getHighScoresList());
+        sortScores.quickSort();
+        if(h.checkIfHigherThanLast(player.getScore()))
+        {
+            String name = JOptionPane.showInputDialog(this, "Please type your name");
+            if(name == null)
+            {
+                name = "Unknown";
+            }
+            player.setPlayerName(name);
+        }
+        else
+        {
+            player.setPlayerName("Default");
+        }
+        h.checkHighScore(player);
+        h.drawHighScores(g);
+        sortScores = new Sort(h.getHighScoresList());
+        sortScores.quickSort();
+        h.writeHighScores();
+        repaint();
+    }
+    
     @Override
     public void run() {
         while (isRunning) {
             boolean addBall = false;
             repaint();
             //for testing
-            int num = 0;
-            for (int i = 0; i < NUMBER_OF_ROWS && num !=40 ; i++) {
-                for (int j = 0; j < NUMBER_OF_COLS; j++) {
-                    System.out.println((num++) + " " + bricks[i][j]);
-                }
-            }
+            //int num = 0;
+//            for (int i = 0; i < NUMBER_OF_ROWS && num !=40 ; i++) {
+//                for (int j = 0; j < NUMBER_OF_COLS; j++) {
+//                    System.out.println((num++) + " " + bricks[i][j]);
+//                }
+//            }
             //check ball collision with sides
             for (Ball ball : balls) {
                 if ((ball.getPositionX() + ball.getDeltaT() * ball.getVelocityX() > getWidth() - ball.getRadius())
@@ -144,10 +173,12 @@ public class Game extends JPanel implements ActionListener, Runnable {
                         || ball.getPositionY() + ball.getDeltaT() * ball.getVelocityY() < ball.getRadius()) {
                     ball.setVelocityY(-ball.getVelocityY());
                     missedCounter++;
+                    BreakOut.incrementMissedCounter();
                     if (missedCounter == 3) {
                         stop();
-                        JOptionPane.showMessageDialog(null, "You Lose!!!!!");
-                        break; //skip the while loop
+                        //JOptionPane.showMessageDialog(null, "You Lose!!!!!");
+                        isRunning = false; //skip the while loop
+                        repaint();
                     }
                 }
 
@@ -181,6 +212,7 @@ public class Game extends JPanel implements ActionListener, Runnable {
                                     addBall = true;
                                     //add it to the balls thread
                                 }
+                                player.setScore(player.getScore()+bricks[i][j].getScore());
                                 repaint();
                                 quit = false; //this will break the outer for loop
                                 break; //this will break the inner for loop
@@ -218,8 +250,9 @@ public class Game extends JPanel implements ActionListener, Runnable {
             }
             if (bricksCounter == 0) {
                 stop();
-                JOptionPane.showMessageDialog(null, "You won!!!!");
-                break; //leave the while loop
+                //JOptionPane.showMessageDialog(null, "You won!!!!");
+                isRunning = false;
+                //isRunning = false; //leave the while loop
             }
 
             for (Ball ball : balls) {
@@ -238,7 +271,22 @@ public class Game extends JPanel implements ActionListener, Runnable {
             }
         }
     }
-
+    public boolean checkGameStatus()
+    {
+        return isRunning;
+    }
+    public int getBricksCounter()
+    {
+        return bricksCounter;
+    }
+    public int getMissedCounter()
+    {
+        return missedCounter;
+    }
+    public int getHighScore()
+    {
+        return player.getScore();
+    }
     public void start() {
         thread = new Thread(this);
         isRunning = true;
@@ -274,6 +322,11 @@ public class Game extends JPanel implements ActionListener, Runnable {
         }
         //draw paddle
         paddle.drawPaddle(g);
+        if(missedCounter == 3 || bricksCounter == 0)
+        {
+            checkHighScore(g);
+            System.out.println("drawing high scores");
+        }
     }
 
     class KeyboardInput extends KeyAdapter {

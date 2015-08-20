@@ -27,9 +27,9 @@ public class Ball {
     public Ball() {
         setPositionX(600);
         setPositionY(400);
-        double x = random.nextDouble();
-        double y = random.nextDouble();
-        double n = Math.sqrt(x * x + y * y);
+//        double x = random.nextDouble();
+//        double y = random.nextDouble();
+//        double n = Math.sqrt(x * x + y * y);
         this.setVelocityX(5);
         this.setVelocityY(5);
         this.setRadius(10);

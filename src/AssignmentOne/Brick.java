@@ -23,7 +23,6 @@ public class Brick extends Block {
         super.setWidth(width);
         super.setHeight(height);
         super.setIsVisible(isVisible);
-        
         this.setIsSpecial(isSpecial);
         if (isSpecial) {//setup the special block to be gray and not have a score value
             super.setColor(Color.gray);
