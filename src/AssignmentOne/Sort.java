@@ -6,8 +6,8 @@
 package AssignmentOne;
 
 /**
- *
- * @author f03n1x
+ * @author Saif Asad
+ * @author Mark Manson
  */
 public class Sort <E extends Comparable<? super E>> 
 {
@@ -16,7 +16,6 @@ public class Sort <E extends Comparable<? super E>>
     {
         this.data = data;
     }
-    
     public void quickSort()
     {
         quickSortRecursive(0, data.length - 1);

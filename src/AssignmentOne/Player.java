@@ -1,5 +1,9 @@
-package AssignmentOne;
 
+package AssignmentOne;
+/**
+ * @author Saif Asad
+ * @author Mark Manson
+ */
 public class Player implements Comparable<Player> {
 
     private String playerName;

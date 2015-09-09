@@ -1,9 +1,9 @@
 package AssignmentOne;
 import java.awt.Color;
-import java.awt.Graphics;
 /**
  *
  * @author Saif Asad
+ * @author Mark Manson
  */
 
 public abstract class Block {

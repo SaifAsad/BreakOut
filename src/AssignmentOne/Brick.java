@@ -5,9 +5,8 @@ import java.awt.Graphics;
 
 /**
  *
- * 
- * 
  * @author Saif Asad
+ * @author Mark Manson
  */
 public class Brick extends Block {
 
@@ -17,14 +16,14 @@ public class Brick extends Block {
     //have ditinct color than no special
     private boolean isSpecial;
 
-    public Brick(int positionX, int PositionY, int width, int height, Color color, boolean isVisible, int score, boolean isSpecial) {//setup the block with variables
+    public Brick(int positionX, int PositionY, int width, int height, Color color, boolean isVisible, int score, boolean special) {//setup the block with variables
         super.setPositionX(positionX);
         super.setPositionY(PositionY);
         super.setWidth(width);
         super.setHeight(height);
         super.setIsVisible(isVisible);
-        this.setIsSpecial(isSpecial);
-        if (isSpecial) {//setup the special block to be gray and not have a score value
+        this.setIsSpecial(special);
+        if (special) {//setup the special block to be gray and not have a score value
             super.setColor(Color.gray);
             this.score = 0;
         } else{//this block is not special and must have a score value
@@ -32,8 +31,11 @@ public class Brick extends Block {
             super.setColor(color);
         }
     }
-    
-    public void drawBricks(Graphics g) {
+    /**
+     * Draws a brick to the screen with given parameters from this class
+     * @param g the graphics object used to draw the brick to the screen
+     */
+    public void drawBrick(Graphics g) {
         g.setColor(this.getColor());
         g.fill3DRect(this.getPositionX(), this.getPositionY(), this.getWidth(), this.getHeight(), true);
     }
